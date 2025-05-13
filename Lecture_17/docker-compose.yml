@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080-8082:80"
+    volumes:
+      - ./web:/usr/share/nginx/html
+    networks:
+      - appnet
+    restart: always
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: myapp
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - appnet
+    restart: always
+  
+  cache:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - appnet
+    restart: always
+
+volumes:
+  web-data:
+  db-data:
+
+networks:
+  appnet:
+    driver: bridge
